@@ -4,17 +4,15 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Random;
-import java.util.Scanner;
 
-/**
- * Hello world!
- *
- */
+
+
 public final class App 
 {
     private App() {
@@ -22,7 +20,7 @@ public final class App
     }
 
 
-    public static void main( String[] args )
+    public static void main( String[] args ) throws IOException
     {
         
         // need the random class to carry out randomize operation
@@ -34,9 +32,7 @@ public final class App
         //store my guess
         Integer myGuess = 0;
 
-        // expect input from keyboard
-       // Scanner scanner = new Scanner(System.in);
-
+        
        // open the socket server to listen on port 1234 for input
        System.out.println("Server running on port 1234");
         ServerSocket ss = new ServerSocket(1234);
@@ -55,20 +51,16 @@ public final class App
 
         String msgRc = "";
 
-        while (msgRc.equals("quit")) {
+        while (!msgRc.equals("quit")) {
             // guess XX
             msgRc = dis.readUTF();
-        }
+        
 
         if (msgRc.contains("guess")) {
             myGuess = Integer.parseInt(msgRc.substring(6));
-
         }
 
         // allow user to guess until they got the random number correct
-        while (myGuess != randomNumber) {
-            myGuess = scanner.nextInt();
-
             if (myGuess < randomNumber) {
                 dos.writeUTF("Your guessed number is lower");
             } else if (myGuess > randomNumber) {
@@ -79,7 +71,7 @@ public final class App
 
             // ensure records are written and send across socket
             dos.flush();
-        }
+    }
 
         //close the input and output streams
         dos.close();
@@ -89,6 +81,6 @@ public final class App
         dis.close();
         bis.close();
         is.close();
-        
+
     }
 }
